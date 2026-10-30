@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Inspect logs
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Agent artefacts (tracked selectively)
+agent_artefacts/*
+!agent_artefacts/.gitkeep
+!agent_artefacts/trajectory_analysis/
+agent_artefacts/trajectory_analysis/*
+!agent_artefacts/trajectory_analysis/inspect_scout/
+agent_artefacts/trajectory_analysis/inspect_scout/scout_results/
+agent_artefacts/trajectory_analysis/inspect_scout/logs/
+agent_artefacts/trajectory_analysis/inspect_scout/__pycache__/
+
+# uv
+.python-version

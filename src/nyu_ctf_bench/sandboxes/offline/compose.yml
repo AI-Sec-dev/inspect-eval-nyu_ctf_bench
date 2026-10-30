@@ -1,0 +1,8 @@
+services:
+  agent:
+    image: aisiuk/evals-cybench-agent-sandbox
+    command: tail -f /dev/null
+    init: true
+    working_dir: /root
+    network_mode: none
+    x-default: true

@@ -1,0 +1,146 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+fallback_version = "0.0.0+unknown"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["nyu_ctf_bench*"]
+
+[tool.setuptools.package-data]
+"nyu_ctf_bench" = ["sandboxes/**/*.yml"]
+
+[tool.inspect-evals-lint]
+preset = "single-eval"
+
+[tool.ruff]
+src = ["src"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # flake8
+    "D",      # pydocstyle
+    "I",      # isort
+    "SIM101", # duplicate isinstance
+    "YTT",    # flake8-2020
+    "LOG",    # flake8-logging
+    "NPY",    # numpy-specific-rules-npy
+    "PLE",    # pylint error
+    "PLR",    # pylint refactor
+    "PLW",    # pylint warning
+    "PLW1514", # unspecified-encoding: open() and read_text() without encoding=
+    "UP006",  # Prevent List and Dict, use list and dict instead.
+    "UP007",  # Prevent Union[X, Y], use [X | Y] instead.
+    "UP045",  # Prevent Optional[X], use X | None instead.
+    "FURB",   # refurb
+    "TID252", # relative-imports
+]
+ignore = [
+    "E203",    # whitespace-before-punctuation
+    "E501",    # line-too-long
+    "D10",     # missing docstrings
+    "D212",    # docstring multi-line-summary-first-line
+    "D415",    # docstring missing-terminal-punctuation
+    "PLR0911", # Too many return statements
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments in function definition
+    "PLR0915", # Too many statements
+]
+# PLW1514 is a preview rule, so it needs preview. explicit-preview-rules keeps the
+# other preview rules under the selected prefixes, such as PLW and FURB, off.
+preview = true
+explicit-preview-rules = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004"]  # Allow magic numbers in tests
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-rA --color=yes --durations=10"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+log_level = "WARNING"
+env_files = [".env"]
+# pytest-inspect-evals registers the slow, dataset_download, k8s, gpu,
+# huggingface, docker and posix_only markers. Dataset-download tests run by
+# default here; set RUN_DATASET_DOWNLOAD_TESTS=0 to skip them.
+inspect_evals_dataset_download = true
+
+[tool.mypy]
+exclude = [
+    "build",
+]
+warn_unused_ignores = true
+no_implicit_reexport = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["nyu_ctf_bench", "nyu_ctf_bench.*"]
+warn_return_any = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+extra_checks = true
+disable_error_code = "unused-ignore"
+
+[project]
+name = "nyu_ctf_bench"
+description = "Inspect AI implementation of a security-restricted subset of the NYU CTF Bench cybersecurity benchmark"
+authors = [{ name = "BSI" }]
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dynamic = ["version"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "inspect_ai>=0.3.217",
+    "inspect-evals",  # Shared cache location used by the dataset loader
+    "pyyaml>=5.1.0",
+    "openai>=3.39.0",
+]
+
+[project.urls]
+"Source Code" = "https://github.com/AI-Sec-dev/inspect-eval-nyu_ctf_bench"
+"Issue Tracker" = "https://github.com/AI-Sec-dev/inspect-eval-nyu_ctf_bench/issues"
+
+[project.entry-points.inspect_ai]
+nyu_ctf_bench = "nyu_ctf_bench"
+
+[dependency-groups]
+dev = [
+    "inspect-evals-lint==0.12.0",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-dotenv",
+    "pytest-inspect-evals==0.1.0",
+    "ruff==0.15.11",
+    "types-PyYAML",
+]
